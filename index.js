@@ -15,6 +15,7 @@ const getWalletBalance = async () => {
     try {
         const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
         const myWallet = await Keypair.fromSecretKey(secretKey)
+        console.log(`Getting balance for ${myWallet.publicKey}`)
         const walletBalance = await connection.getBalance(myWallet.publicKey)
         console.log(`Wallet balance: ${parseInt(walletBalance)/LAMPORTS_PER_SOL}SOL`);
     } catch(err) {
@@ -24,6 +25,7 @@ const getWalletBalance = async () => {
 
 const airdropSol = async () => {
     try {
+        console.log(`Executing airdrop function: `)
         const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
         const walletKeyPair = await Keypair.fromSecretKey(secretKey);
         const fromAirDropSignature = await connection.requestAirdrop(
@@ -35,3 +37,11 @@ const airdropSol = async () => {
         console.error(err)
     }
 }
+
+const driverFunction = async () => {
+    await getWalletBalance()
+    await airdropSol()
+    await getWalletBalance()
+}
+
+driverFunction()
